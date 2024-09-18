@@ -1,8 +1,3 @@
-Here is the updated README based on your key points:
-
----
-
-# Weather Application - README
 
 ## Project Overview
 This project is a weather application built using Flutter that displays real-time weather data for the user’s current location and other places via a search functionality. The app leverages the **OpenWeather API** to fetch weather data, including current weather and a 5-day/3-hour forecast. Additionally, it supports temperature unit switching between Celsius and Fahrenheit, allows location-based weather detection using the device's GPS, and includes a bottom navigation bar for easy navigation between screens.
