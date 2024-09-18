@@ -59,8 +59,7 @@ class WeatherProvider with ChangeNotifier {
   }
 
   Future<String?> _getCurrentWeatherData() async {
-    final url =
-        '${dotenv.env['ENDPOINT']}weather?lat=$latitude&lon=$longitude&units=$unit&appid=${dotenv.env['APIKEY']}';
+    final url = 'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=$unit&appid=${dotenv.env['API_KEY']}';
     try {
       Response response = await get(Uri.parse(url));
       Map<String, dynamic> map = jsonDecode(response.body);
@@ -77,8 +76,7 @@ class WeatherProvider with ChangeNotifier {
   }
 
   Future<String?> _getForecastWeatherData() async {
-    final url =
-        '${dotenv.env['ENDPOINT']}forecast?lat=$latitude&lon=$longitude&units=$unit&appid=${dotenv.env['APIKEY']}';
+    final url = 'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&units=$unit&appid=${dotenv.env['API_KEY']}';
     try {
       Response response = await get(Uri.parse(url));
       Map<String, dynamic> map = jsonDecode(response.body);

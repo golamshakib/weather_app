@@ -3,7 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:weather_app/providers/weather_provider.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/search_bar_screen.dart';
-import 'home_location_screen.dart';
+import 'home_weather_screen.dart';
 
 class FirstLayoutScreen extends StatefulWidget {
   const FirstLayoutScreen({super.key});
@@ -16,7 +16,7 @@ class _FirstLayoutScreenState extends State<FirstLayoutScreen> {
   int _selectedIndex = 0;
   final List<Widget> _screens = [
     const HomeScreen(),
-    const HomeLocationScreen(),
+    const HomeWeatherScreen(),
     const SearchBarScreen(),
   ];
 
@@ -85,7 +85,7 @@ class _FirstLayoutScreenState extends State<FirstLayoutScreen> {
             NavigationDestination(
               icon: Icon(Icons.location_on_outlined),
               selectedIcon: Icon(Icons.location_on),
-              label: 'Home Location',
+              label: 'Home Weather',
             ),
             NavigationDestination(
               icon: Icon(Icons.search_outlined),

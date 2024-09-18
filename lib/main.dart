@@ -4,14 +4,15 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/providers/weather_provider.dart';
 import 'package:weather_app/screens/first_layout_screen.dart';
-import 'package:weather_app/screens/home_location_screen.dart';
+import 'package:weather_app/screens/home_weather_screen.dart';
 import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/search_bar_screen.dart';
 import 'package:weather_app/screens/settings_screen.dart';
 
+
 void main() async {
-  await dotenv.load(fileName: '.env');
   WidgetsFlutterBinding.ensureInitialized();
+  await dotenv.load(fileName: '.env');
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(ChangeNotifierProvider(
       create: (context) => WeatherProvider(),
@@ -33,7 +34,7 @@ class MyApp extends StatelessWidget {
       routes: {
         '/settingsScreen': (context) => const SettingsScreen(),
         '/homeScreen': (context) => const HomeScreen(),
-        '/homeLocationScreen': (context) => const HomeLocationScreen(),
+        '/homeWeatherScreen': (context) => const HomeWeatherScreen(),
         '/searchBarScreen': (context) => const SearchBarScreen(),
       },
     );
