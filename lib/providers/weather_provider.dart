@@ -1,5 +1,8 @@
 import 'dart:convert';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:weather_app/models/current_weather_model.dart';
@@ -11,15 +14,16 @@ class WeatherProvider with ChangeNotifier {
   CurrentWeatherModel? currentWeatherModel;
   ForecastWeatherModel? forecastWeatherModel;
 
-  final  _prefKey = 'Status';
+  final _prefKey = 'Status';
   double latitude = 0.0;
   double longitude = 0.0;
   String unit = metric;
-  String unitSymbol =celsius;
+  String unitSymbol = celsius;
 
-  bool hasDataLoaded () => currentWeatherModel != null && forecastWeatherModel!= null;
+  bool hasDataLoaded() =>
+      currentWeatherModel != null && forecastWeatherModel != null;
 
-  Future<void> updateUnit (bool value) async {
+  Future<void> updateUnit(bool value) async {
     unit = value ? imperial : metric;
     unitSymbol = value ? fahrenheit : celsius;
   }
@@ -29,64 +33,66 @@ class WeatherProvider with ChangeNotifier {
     return pref.setBool(_prefKey, value);
   }
 
-  Future<bool> getTempStatus () async{
+  Future<bool> getTempStatus() async {
     final pref = await SharedPreferences.getInstance();
     return pref.getBool(_prefKey) ?? false;
   }
 
-  Future<void> getAllData() async {
+  Future<String?> getAllData() async {
     final status = await getTempStatus();
     await updateUnit(status);
     await detectDeviceLocation();
-    await weatherData();
+    return await weatherData();
   }
 
- Future<void> detectDeviceLocation () async {
+  Future<void> detectDeviceLocation() async {
     final position = await _determinePosition();
     latitude = position.latitude;
     longitude = position.longitude;
   }
 
+  Future<String?> weatherData() async {
+    String? currentWeatherError = await _getCurrentWeatherData();
+    String? forecastWeatherError = await _getForecastWeatherData();
 
-  Future<void> weatherData() async {
-    await _getCurrentWeatherData();
-    await _getForecastWeatherData();
+    return currentWeatherError ?? forecastWeatherError;
   }
 
-  _getCurrentWeatherData() async {
+  Future<String?> _getCurrentWeatherData() async {
     final url =
-        'https://api.openweathermap.org/data/2.5/weather?lat=$latitude&lon=$longitude&units=$unit&appid=$apiKey';
+        '${dotenv.env['ENDPOINT']}weather?lat=$latitude&lon=$longitude&units=$unit&appid=${dotenv.env['APIKEY']}';
     try {
       Response response = await get(Uri.parse(url));
       Map<String, dynamic> map = jsonDecode(response.body);
       if (response.statusCode == 200) {
         currentWeatherModel = CurrentWeatherModel.fromJson(map);
         notifyListeners();
-      }else{
-        print(map['message']);
+        return null;
+      } else {
+        return 'Error: ${map['message']}';
       }
     } catch (error) {
-      print(error.toString());
+      return 'Something went wrong: ${error.toString()}';
     }
   }
 
-  _getForecastWeatherData() async {
+  Future<String?> _getForecastWeatherData() async {
     final url =
-        'https://api.openweathermap.org/data/2.5/forecast?lat=$latitude&lon=$longitude&units=$unit&appid=$apiKey';
-    try{
+        '${dotenv.env['ENDPOINT']}forecast?lat=$latitude&lon=$longitude&units=$unit&appid=${dotenv.env['APIKEY']}';
+    try {
       Response response = await get(Uri.parse(url));
       Map<String, dynamic> map = jsonDecode(response.body);
-      if(response.statusCode == 200){
+      if (response.statusCode == 200) {
         forecastWeatherModel = ForecastWeatherModel.fromJson(map);
         notifyListeners();
-      }else{
-        print(map['message']);
+        return null;
+      } else {
+        return 'Error: ${map['message']}';
       }
-    }catch(error){
-      print('error');
+    } catch (error) {
+     return 'Something went wrong: ${error.toString()}';
     }
   }
-
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;

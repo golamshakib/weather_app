@@ -1,6 +1,4 @@
-import 'dart:ui';
 
-const apiKey = '88f8f602ae421c2978b86ff0d1476950';
 const metric = 'metric';
 const imperial = 'imperial';
 const celsius = 'C';

@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:provider/provider.dart';
 import 'package:weather_app/providers/weather_provider.dart';
 import 'package:weather_app/screens/first_layout_screen.dart';
@@ -8,7 +9,8 @@ import 'package:weather_app/screens/home_screen.dart';
 import 'package:weather_app/screens/search_bar_screen.dart';
 import 'package:weather_app/screens/settings_screen.dart';
 
-void main(){
+void main() async {
+  await dotenv.load(fileName: '.env');
   WidgetsFlutterBinding.ensureInitialized();
   SystemChrome.setPreferredOrientations([DeviceOrientation.portraitUp]);
   runApp(ChangeNotifierProvider(
